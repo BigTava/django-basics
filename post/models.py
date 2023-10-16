@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models import CASCADE
 from django.core.exceptions import ValidationError
 
+from .managers import FeedManager
+
 BAD_WORDS = ["java", "waterfall", "enterprise"]
 
 def validate_no_bad_words(content):
@@ -14,6 +16,8 @@ class Post(models.Model):
     content = models.CharField(max_length=140, validators=[validate_no_bad_words])
     created_on = models.DateTimeField('date created', auto_now_add=True)
 
+    feed_manager = FeedManager()
+    
     def __str__(self):
         return '{}: {}'.format(self.author, self.content[0:20])
     

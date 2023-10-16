@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404
+from django.views.generic.list import ListView
+
 from .models import Post, Comment
 from .forms import PostForm
-from django.views.generic.list import ListView
+
 
 class PostList(ListView):
     model = Post
@@ -36,7 +38,7 @@ def post_feed(request):
     if request.method == 'POST':
         post_form = add_post(request)
     template = loader.get_template('feed.html')
-    posts = Post.objects.exclude(author=request.user).order_by('-created_on')
+    posts = Post.feed_manager.get_feed(request)
 
     return HttpResponse(template.render({'posts': posts, 'new_post_form': post_form}, request))
 
