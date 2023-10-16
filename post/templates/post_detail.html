@@ -1,0 +1,23 @@
+{% include 'header.html' %}
+
+<div class="wrapper">
+    <div class="post">
+        <span id="post-{{post.id}}">
+            <span class="date">{{post.created_on}}</span> by 
+                <a href="/profile/{{ post.author.id }}">{{post.author.username}}</a>
+            </p>
+            {{post.content}}
+            {% for comment in post.comments %}
+            <div class="wrapper">
+                <div class="post">
+                    <span id="comment-{{comment.id}}">
+                        <span class="date">{{comment.created_on}}</span> by
+                        <a href="/profile/{{ comment.author.id }}">{{comment.author.username}}</a>
+                        {{comment.content}}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </span>
+    </div>
+</div>

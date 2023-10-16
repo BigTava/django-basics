@@ -22,7 +22,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from post.views import handler_404, PostList
 
+handler404 = handler_404
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', post_feed, name='home'),
@@ -30,5 +32,6 @@ urlpatterns = [
     path('add_post', add_post),
     path('profile/<int:profilepage_id>', profile_detail, name='profile page'),
     path('useraccount/<int:useraccount_id>/edit', useraccount_edit, name='edit user profile'),
-    path('businesses', business_listing, name='business_listing')
+    path('businesses', business_listing, name='business_listing'),
+    path("postlist", PostList.as_view(), name="post_list")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
