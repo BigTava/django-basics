@@ -1,7 +1,10 @@
+import json
+
 from django.http import HttpResponse
 from django.template import loader
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.list import ListView
+from django.views.decorators.vary import vary_on_cookie
 
 from .models import Post, Comment
 from .forms import PostForm
@@ -33,7 +36,10 @@ def handler_404(request, exception):
     template = loader.get_template('post_404.html')
     return HttpResponse(template.render({'exception': exception}, request), status=404)
 
+@vary_on_cookie
 def post_feed(request):
+    if not request.user.is_authenticated:
+        return redirect('/account/login/')
     post_form = PostForm()
     if request.method == 'POST':
         post_form = add_post(request)
@@ -47,16 +53,29 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     return HttpResponse(template.render({'post': post}, request))
 
+
+def draft_post(request):
+    if request.method == 'POST':
+        request.session['draft_post'] = json.loads(request.body.decode('utf-8'))['post_content']
+        return HttpResponse(status=200)
+
 def add_post(request):
-    print("add_post")
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
+        
             new_post = Post.objects.create(
-                content=form.cleaned_data['content'],
-                author=request.user
+                content = form.cleaned_data['content'],
+                author = request.user
             )
             new_post.save()
         else:
             print(form.errors)
         return form
+    else:
+        # Get request
+        template = loader.get_template('add_post.html')
+        form = PostForm()
+        if request.session.get('draft_post'):
+            form = PostForm({'content': request.session.get('draft_post')})
+        return HttpResponse(template.render({'form': form}, request))

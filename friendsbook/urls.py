@@ -1,9 +1,15 @@
-from post.views import post_detail, post_feed, add_post
+
+
+from post.views import post_detail, post_feed, add_post, draft_post
 from profilepage.views import profile_detail, custom_content
 from useraccount.views import useraccount_edit
 from business.views import business_listing
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path, include
+from post.views import handler_404, PostList
+from useraccount.views import accountlist
 
 """friendsbook URL Configuration
 
@@ -20,10 +26,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
-from post.views import handler_404, PostList
-from useraccount.views import accountlist
 
 handler404 = handler_404
 urlpatterns = [
@@ -36,5 +38,7 @@ urlpatterns = [
     path('businesses', business_listing, name='business_listing'),
     path("postlist", PostList.as_view(), name="post_list"),
     path('accountlist', accountlist, name='account_listing'),
-    path('custom/<int:profilepage_id>', custom_content, name='custom page')
+    path('custom/<int:profilepage_id>', custom_content, name='custom page'),
+    path("account/", include("django.contrib.auth.urls")),
+    path("draft_post", draft_post)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
