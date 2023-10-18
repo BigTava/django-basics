@@ -1,4 +1,6 @@
 {% load bootstrap5 %}
+{% load humanize %}
+{% load l10n %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% include 'header.html' %}
@@ -11,8 +13,11 @@
         {% endif %}
         <h2>{{profile.subject.name}}</h2>
         <img src="/{{profile.subject.profile_photo}}" style="float:left;height:200px;">
-        <p><span class="label">Joined:</span> {{profile.subject.created_on}}</p>
-        <p><span class="label">Birthday:</span> {{profile.subject.birthday}}</p>
+        <p><span class="label">Joined:</span> {{profile.subject.created_on|naturalday}}</p>
+        <p><span class="label">Birthday:</span> {{profile.subject.birthday|naturalday}}</p>
+        {% localize on%}
+        <p><span class="label">Birthday:</span> {{ seconds_since | intword}} seconds ago</p>
+        {% endlocalize %}
 
         <div class="profile-about">
             {{profile.subject.about}}

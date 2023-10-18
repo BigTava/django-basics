@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models 
 
 class FeedManager(models.Manager):
     def get_feed(self, request):

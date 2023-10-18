@@ -16,6 +16,7 @@ class Post(models.Model):
     content = models.CharField(max_length=140, validators=[validate_no_bad_words])
     created_on = models.DateTimeField('date created', auto_now_add=True)
 
+    objects = models.Manager()
     feed_manager = FeedManager()
     
     def __str__(self):

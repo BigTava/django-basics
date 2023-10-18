@@ -1,5 +1,5 @@
 from post.views import post_detail, post_feed, add_post
-from profilepage.views import profile_detail
+from profilepage.views import profile_detail, custom_content
 from useraccount.views import useraccount_edit
 from business.views import business_listing
 from django.conf import settings
@@ -36,4 +36,5 @@ urlpatterns = [
     path('businesses', business_listing, name='business_listing'),
     path("postlist", PostList.as_view(), name="post_list"),
     path('accountlist', accountlist, name='account_listing'),
+    path('custom/<int:profilepage_id>', custom_content, name='custom page')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
